@@ -1,0 +1,171 @@
+---
+title: "individual1"
+output: html_document
+---
+
+```{r}
+Happy <- readRDS("HAPPY.rds")
+
+summary(Happy)
+
+# First, I'll take care of Number 1. of Part One by replacing all instances of "IAP," "DK," and "NA" with NA.
+Happy[Happy == "IAP" | Happy == "DK" | Happy == "NA"] <- NA
+
+
+# Next, starting with the variable HAPPY, I will cast the variable type (if necessary), organize the factor levels, and make a histogram of the variable data.
+str(Happy$HAPPY)
+# HAPPY is a categorical variable with type character, so I cast it as a factor.
+Happy$HAPPY <- factor(Happy$HAPPY)
+levels(Happy$HAPPY)
+# Factors are already in a sensible order
+
+library(ggplot2)
+ggplot(Happy, aes(x=HAPPY)) + geom_bar() + ggtitle("Distribution of HAPPY Categories")
+```
+
+```{r}
+# Manipulation of YEAR variable
+
+Year <- Happy$YEAR
+
+str(Year)
+
+ggplot(Happy, aes(x=Year)) + geom_histogram() + ggtitle("Distribution of Years")
+
+# There is an uneven amount of data collected from year to year. Some years have significantly more representation, and some years are not present at all.
+```
+
+```{r}
+# Manipulation of AGE variable
+Age <- Happy$AGE
+
+str(Age)
+
+# Converting values of "89 OR OLDER" to "89"
+Age[Age == "89 OR OLDER"] <- "89"
+
+Age <- as.numeric(Age)
+
+ggplot(Happy, aes(x=Age)) + geom_histogram(binwidth = 10) + ggtitle("Distribution of Age")
+
+# The age data has a smooth, normal distribution, and it appears to be skewed right. The majority of people in the data set are between 25 and 50 years old.
+```
+
+```{r}
+# Manipulation of SEX
+Sex <- Happy$SEX
+
+str(Sex)
+
+Sex <- factor(Sex)
+levels(Sex) <- c('MALE', 'FEMALE')
+
+ggplot(Happy, aes(x=Sex)) + geom_bar() + ggtitle("Distribution of Sexes")
+
+# There are about 7,500 more male responders than female responders.
+```
+
+```{r}
+# Manipulation of MARITAL
+Marital_Status <- Happy$MARITAL
+
+str(Marital_Status)
+
+library(dplyr)
+Happy %>%
+  group_by(MARITAL) %>%
+  summarize(mean_age = mean(AGE, na.rm=TRUE))
+
+
+lvl = levels(Marital_Status) <- c('NEVER MARRIED', 'SEPARATED', 'MARRIED', 'DIVORCED', 'WIDOWED')
+
+Marital_Status <- factor(Marital_Status, lvl)
+
+ggplot(Happy, aes(x=Marital_Status)) + geom_bar() + ggtitle("Distribution of Marital Statuses")
+
+# The vast majority of responders are married. There is not a clear trend in the data, even though each category was organized by average age.
+```
+
+```{r}
+# Manipulation of DEGREE
+Degree <- Happy$DEGREE
+
+str(Degree)
+
+lvl = levels(Degree) <- c('HIGH SCHOOL', 'LT HIGH SCHOOL', 'JUNIOR COLLEGE', 'BACHELOR', 'GRADUATE')
+
+Degree <- factor(Degree, lvl)
+
+ggplot(Happy, aes(x=Degree)) + geom_bar() + ggtitle("Distribution of Education")
+
+# The majority of responders' highest degree is a high school degree. Junior college degrees appear to be the least common to have as a highest degree.
+```
+
+```{r}
+# Manipulation of FINRELA
+Financial_Rating = Happy$FINRELA
+
+str(Financial_Rating)
+
+lvl = levels(Financial_Rating) <- c('FAR BELOW AVERAGE', 'BELOW AVERAGE', 'AVERAGE', 'ABOVE AVERAGE', 'FAR ABOVE AVERAGE')
+
+Financial_Rating <- factor(Financial_Rating, lvl)
+
+ggplot(Happy, aes(x=Financial_Rating)) + geom_bar() + ggtitle("Distribution of Opinion of Family Income")
+
+# This financial status rating data appears to be normally distributed. Most responders said they are AVERAGE financially, with the extremes of FAR BELOW AVERAGE and FAR ABOVE AVERAGE having the lowest numbers of responses.
+```
+
+```{r}
+# Manipulation of HEALTH
+Health_Rating <- Happy$HEALTH
+
+str(Health_Rating)
+
+Health_Rating <- factor(Health_Rating)
+
+levels(Health_Rating)
+levels(Health_Rating) <- c('POOR', 'FAIR', 'GOOD', 'EXCELLENT')
+
+ggplot(Happy, aes(x=Health_Rating)) + geom_bar() + ggtitle("Distribution of Health Ratings")
+
+# For this column, the majority of respondents identify as being in GOOD health. Overall, the bar chart seems to be slighty skewed to the left, so more people identify as less than GOOD health.
+```
+
+```{r}
+# Manipulation of WTSSALL
+weights <- Happy$WTSSAL
+str(weights)
+
+ggplot(Happy, aes(x=weights)) + geom_histogram(binwidth = 0.5) + ggtitle("Distribution of Category Weights")
+```
+
+```{r}
+# Manipulation of PARTYID
+Party_ID <- Happy$PARTYID
+
+Party_ID <- factor(Party_ID)
+levels(Party_ID)
+levels(Party_ID) <- c('STRONG DEMOCRAT', 'NOT STR DEMOCRAT', 'IND,NEAR DEM', 'INDEPENDENT', 'IND,NEAR REP', 'NOT STR REPUBLICAN', 'STRONG REPUBLICAN', 'OTHER PARTY')
+
+ggplot(Happy, aes(x=Party_ID)) + geom_bar() + ggtitle("Distribution of Political ID's")
+
+# Looking at the bar chart, this column seems to follow a somewhat normal distribution. The majority of responders identify as Independent. Strong Republican has the next highest count, which throws off the normality of the data a little bit.
+```
+
+```{r}
+# Manipulation of POLVIEWS
+
+Political_Views <- Happy$POLVIEWS
+str(Political_Views)
+
+Political_Views <- factor(Political_Views)
+levels(Political_Views)
+levels(Political_Views) <- c('EXTREMELY LIBERAL', 'LIBERAL', 'SLIGHTLY LIBERAL', 'MODERATE', 'SLIGHTLY CONSERVATIVE', 'CONSERVATIVE', 'EXTREMELY CONSERVATIVE')
+
+ggplot(Happy, aes(x=Political_Views)) + geom_bar() + ggtitle("Distribution of Political Viewpoints")
+
+# The political views seem to have an uneven distribution. The majority of responders identify as slightly conservative, and the extreme viewpoints of extremely liberal and extremely conservative have the next highest counts.
+```
+
+```
