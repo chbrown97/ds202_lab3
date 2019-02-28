@@ -1,0 +1,21 @@
+---
+title: "Team"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+Happy <- readRDS("HAPPY.rds")
+Happy[Happy == "IAP" | Happy == "DK" | Happy == "NA"] <- NA
+ggplot(Happy, aes(x=SEX, fill=HAPPY)) + geom_bar() + xlab("Sex") + ylab("Total")
+# We can see from the graph that the dataset comprises of mostly women. In terms of each sex's happiness it is distributed relatively the same among their totals. 
+ggplot(Happy, aes(x=MARITAL, fill=FINRELA)) + geom_bar() + facet_wrap(~HAPPY) + xlab("Marital Status") + ylab("Total") +
+                                              theme(axis.text.x = element_text(angle = 45, hjust = 1))
+# The relatioship between happiness, FINRELA(opinion of income) and marital status is shown here. We can see married people are most prevelant and have the most amount of pretty happy and very happy. They also have mostly average to above average opinion of income. However, those who are widowed and considered very happy or pretty happy have mostly average. This opinion of their income can be linked to the fact that even though they say their happy, they might be facing economic struggles which causes them to say their income isn't good. 
+
+
+```
