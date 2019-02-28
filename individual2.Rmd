@@ -1,0 +1,78 @@
+---
+title: "Individual 2"
+output: html_document
+---
+
+
+
+```{r}
+#lab 3
+HAPPY <- readRDS("HAPPY.rds")
+library(ggplot2)
+library(ggmosaic)
+library(dplyr)
+head(HAPPY)
+
+#part1
+#changing missing values to NA
+HAPPY$POLVIEWS[HAPPY$POLVIEWS == "IAP"] <- NA
+HAPPY$POLVIEWS[HAPPY$POLVIEWS == "DK"] <- NA
+HAPPY$POLVIEWS[HAPPY$POLVIEWS == "NA"] <- NA
+
+HAPPY$PARTYID[HAPPY$POLVIEWS == "IAP"] <- NA
+HAPPY$PARTYID[HAPPY$POLVIEWS == "DK"] <- NA
+HAPPY$PARTYID[HAPPY$POLVIEWS == "NA"] <- NA
+
+HAPPY$HEALTH[HAPPY$HEALTH == "IAP"] <- NA
+HAPPY$HEALTH[HAPPY$HEALTH == "DK"] <- NA
+HAPPY$HEALTH[HAPPY$HEALTH == "NA"] <- NA
+
+HAPPY$FINRELA[HAPPY$FINRELA == "IAP"] <- NA
+HAPPY$FINRELA[HAPPY$FINRELA == "DK"] <- NA
+HAPPY$FINRELA[HAPPY$FINRELA == "NA"] <- NA
+
+HAPPY$DEGREE[HAPPY$DEGREE == "IAP"] <- NA
+HAPPY$DEGREE[HAPPY$DEGREE== "DK"] <- NA
+HAPPY$DEGREE[HAPPY$DEGREE == "NA"] <- NA
+
+HAPPY$MARITAL[HAPPY$MARITAL == "IAP"] <- NA
+HAPPY$MARITAL[HAPPY$MARITAL == "DK"] <- NA
+HAPPY$MARITAL[HAPPY$MARITAL == "NA"] <- NA
+
+HAPPY$SEX[HAPPY$SEX== "IAP"] <- NA
+HAPPY$SEX[HAPPY$SEX == "DK"] <- NA
+HAPPY$SEX[HAPPY$SEX == "NA"] <- NA
+
+HAPPY$AGE[HAPPY$AGE == "IAP"] <- NA
+HAPPY$AGE[HAPPY$AGE == "DK"] <- NA
+HAPPY$AGE[HAPPY$AGE == "NA"] <- NA
+
+HAPPY$YEAR[HAPPY$YEAR == "IAP"] <- NA
+HAPPY$YEAR[HAPPY$YEAR == "DK"] <- NA
+HAPPY$YEAR[HAPPY$YEAR == "NA"] <- NA
+
+HAPPY$HAPPY[HAPPY$HAPPY == "IAP"] <- NA
+HAPPY$HAPPY[HAPPY$HAPPY == "DK"] <- NA
+HAPPY$HAPPY[HAPPY$HAPPY == "NA"] <- NA
+
+
+#changing "89 OR OLDER" to 89
+HAPPY$AGE[HAPPY$AGE == "89 OR OLDER"] <- "89"
+HAPPY$AGE <- as.character(HAPPY$AGE)
+HAPPY$AGE <- as.numeric(HAPPY$AGE)
+
+#part2:
+#1 We can see from the graph that the dataset compireses of mostly women. In terms of each sex's happiness it is distributed relatively the same among their totals. Most people fall into the "PRETTY HAPPY" category.
+ggplot(HAPPY, aes(x=SEX, fill=HAPPY)) + geom_bar() + xlab("Sex") + ylab("Total")
+
+#2 If we just look at data from the year 2016 we can look at whose opinion of income(FINRELA) is above average. For example, people who are PRETTY HAPPY(PH) and married tend to have more above avg FINRELA meaning they percieve their income to be above average. This can be due to being married and feeling like you may be doing better in life. However, when you look at the divorced people you see not many PH people percieve their FINRELA as above average. Maybe after a recent divorce things can be tough with money so you may think lower of your self income. 
+HAPPY1 <- HAPPY %>% filter(YEAR == 2016)
+HAPPY1$HAPPY[HAPPY1$HAPPY == "NOT TOO HAPPY"] <- "NTH"
+HAPPY1$HAPPY[HAPPY1$HAPPY == "PRETTY HAPPY"] <- "PH"
+HAPPY1$HAPPY[HAPPY1$HAPPY == "VERY HAPPY"] <- "VH"
+ggplot(HAPPY1, aes(x=HAPPY, fill=FINRELA)) + geom_bar() + facet_wrap(~MARITAL ~SEX) + xlab("Happiness Type") + ylab("Total")
+
+#3 One thing I learned is that this dataset is mostly female and married. Wheter intentional or not, a more even distrubution of gender could show different findings. Since this dataset goes very far back you can see the changes in opinion. Politcal views change with time and some of these people views might've changed as time goes on.
+
+
+```
