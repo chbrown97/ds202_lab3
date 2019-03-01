@@ -11,11 +11,51 @@ knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 Happy <- readRDS("HAPPY.rds")
 Happy[Happy == "IAP" | Happy == "DK" | Happy == "NA"] <- NA
-ggplot(Happy, aes(x=SEX, fill=HAPPY)) + geom_bar() + xlab("Sex") + ylab("Total")
+ggplot(Happy, aes(x=SEX, fill=HAPPY)) + geom_bar() + xlab("Sex") + ylab("Total") + ggtitle("Happiness Between Sexes")
 # We can see from the graph that the dataset comprises of mostly women. In terms of each sex's happiness it is distributed relatively the same among their totals. 
 ggplot(Happy, aes(x=MARITAL, fill=FINRELA)) + geom_bar() + facet_wrap(~HAPPY) + xlab("Marital Status") + ylab("Total") +
-                                              theme(axis.text.x = element_text(angle = 45, hjust = 1))
+                                              theme(axis.text.x = element_text(angle = 45, hjust = 1)) + ggtitle("Marital and Financial Status Effects")
 # The relatioship between happiness, FINRELA(opinion of income) and marital status is shown here. We can see married people are most prevelant and have the most amount of pretty happy and very happy. They also have mostly average to above average opinion of income. However, those who are widowed and considered very happy or pretty happy have mostly average. This opinion of their income can be linked to the fact that even though they say their happy, they might be facing economic struggles which causes them to say their income isn't good. 
 
 
+Age <- Happy$AGE
+str(Age)
+
+# Converting values of "89 OR OLDER" to "89"
+Age[Age == "89 OR OLDER"] <- "89"
+
+Age <- as.numeric(Age)
+ggplot(Happy, aes(x=Age, fill=HAPPY)) + geom_histogram(binwidth=5) + ggtitle("Happiness Across Age")
+# This histogram shows that there is a mostly constant relationship between happiness and age over time. There seems to be a constant distribution in the amount of people who identify as not happy, pretty happy, and very happy at each age, from 18 all the way to oler ages.
+
+
+ggplot(Happy, aes(x=HAPPY, y=Age)) + geom_boxplot() + coord_flip() + ggtitle("Distributions of Happiness and Age")
+# These boxplots help confirm the same thing as the previous plot: there is not much of a relationship between happiness and age. The average age is about the same between each level of happiness.
+
+
+ggplot(Happy, aes(x=POLVIEWS, fill=HAPPY, weight=Age)) + geom_bar() + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + ggtitle("Influence of Political Views")
+# This plot seems to show that happiness is not heavily dependent on one's political views. Each political viewpoint seems to have an even distribution of happiness ratings.
+
+
+# Manipulation of FINRELA
+Financial_Rating = Happy$FINRELA
+
+lvl = levels(Financial_Rating) <- c('FAR BELOW AVERAGE', 'BELOW AVERAGE', 'AVERAGE', 'ABOVE AVERAGE', 'FAR ABOVE AVERAGE')
+
+Financial_Rating <- factor(Financial_Rating, lvl)
+
+
+# Manipulation of DEGREE
+Degree <- Happy$DEGREE
+
+lvl = levels(Degree) <- c('HIGH SCHOOL', 'LT HIGH SCHOOL', 'JUNIOR COLLEGE', 'BACHELOR', 'GRADUATE')
+
+Degree <- factor(Degree, lvl)
+
+library(ggmosaic)
+ggplot(data = Happy) + geom_mosaic(aes(x=product(SEX), fill=HAPPY)) + facet_grid(FINRELA ~ DEGREE) + ggtitle("Mosaic of Sex, Financial Status, and Education") + xlab("Highest Education Degree") + ylab("Perceived Financial Status")
+# In this mosaic, if we look at the plots where there is the most blue for Very happy, we see that people with college degrees and above average financial status ratings are the happiest.
+
+
+# After looking at all of the exploratory analysis, it appears that some variables affect happiness more than others. Happiness does not seem to depend on sex, age, or politcal viewpoints. Distributions of happiness seem to have an even spread across both sexes, all age groups, and all political stances. On the other hand, perceived financial status and education do seem to affect happiness. This makes sense because people who don't have higher education degrees and people with lower perceived financial statuses are less likely to have a well-paying job, which can affect one's quality of life.
 ```
